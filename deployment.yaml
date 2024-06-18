@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mainpage
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mainpage
+  template:
+    metadata:
+      labels:
+        app: mainpage
+    spec:
+      containers:
+      - name: mainpage
+        image: benjaminucn/devops-taller-mainpage
+        envFrom: 
+        - secretRef:
+            name: mainpage-secret
+        ports:
+        - containerPort: 3004
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "80m"
+          limits:
+            memory: "128Mi"
+            cpu: "100m"  
