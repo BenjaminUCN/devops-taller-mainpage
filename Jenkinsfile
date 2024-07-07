@@ -1,8 +1,8 @@
 pipeline {
     environment{
         DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials')
+        KUBECONFIG = credentials('kubeconfig')
         APP_NAME = "benjaminucn/devops-taller-mainpage"
-        DOCKER_IMAGE = ''
     }
     agent any
     stages {
