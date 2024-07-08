@@ -17,7 +17,7 @@ spec:
         image: benjaminucn/devops-taller-mainpage:dev
         envFrom: 
         - secretRef:
-            name: mainpage-secret-dev
+            name: mainpage-dev-secret
         ports:
         - containerPort: 3004
         resources:
