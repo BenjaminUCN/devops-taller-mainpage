@@ -1,0 +1,33 @@
+pipeline {
+    environment{
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials')
+        KUBECONFIG = credentials('kubeconfig')
+        APP_NAME = "benjaminucn/devops-taller-mainpage"
+    }
+    agent any
+    stages {
+        stage ('Build docker image'){
+            steps{ 
+                sh 'docker build -t $APP_NAME .'
+                sh 'docker tag $APP_NAME $APP_NAME:dev'
+                sh 'docker tag $APP_NAME $APP_NAME:dev-$BUILD_NUMBER'
+            }
+        }
+        stage('Login to dockerhub') {
+            steps {
+                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+            }
+        }
+        stage('Push image') {
+            steps {
+                sh 'docker push $APP_NAME:dev'
+                sh 'docker push $APP_NAME:dev-$BUILD_NUMBER'
+            }
+        }
+        stage ('Deploy to kubernetes'){
+            steps{
+                sh 'kubectl apply -f deploymentDev.yaml'
+            }
+        }
+    }
+}
